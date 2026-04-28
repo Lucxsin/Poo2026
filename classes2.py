@@ -10,8 +10,14 @@ class Equipe:
         self.jogo = jogo
         self.jogadores = [] # Lista que vai guardar os objetos Jogador
 
+
     def cadastrarJogador(self, um_jogador):
-        self.jogadores.append(um_jogador)
+        if len(self.jogadores) < 5:
+            self.jogadores.append(um_jogador)
+            return True
+        else:
+            print("Equipe lotada")
+            return False
 
     def exibirEquipe(self):
         print(f"\nEquipe: {self.nome_Equipe} | Jogo: {self.jogo}")

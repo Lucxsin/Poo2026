@@ -1,7 +1,9 @@
-from classes import Jogador, Equipe
-
-lista_jogadores = []
-lista_equipes = []
+from classes2 import Jogador, Equipe
+equipe=Equipe("ifpr","valorant")
+jogador=Jogador("Lucas","Lucxsin","turma")
+equipe.cadastrarJogador(jogador)
+lista_jogadores = [jogador]
+lista_equipes = [equipe]
 
 while True:
     print("\n--- MENU CAMPEONATO ---")
