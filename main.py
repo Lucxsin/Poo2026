@@ -12,10 +12,10 @@ class Equipe:
     def __init__(self, nome_equipe, jogo):
         self.nome_equipe = nome_equipe
         self.jogo = jogo
-        self.jogadores = []  # Lista que armazena objetos da classe Jogador
+        self.jogadores = [] 
 
     def cadastrar_jogador(self, jogador):
-        # Desafio: Limite de 5 jogadores por equipe
+        
         if len(self.jogadores) < 5:
             self.jogadores.append(jogador)
             return True
