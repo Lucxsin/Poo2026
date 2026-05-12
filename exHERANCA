@@ -1,0 +1,164 @@
+class Veiculo:
+    def __init__(self, marca, modelo, ano):
+        self.marca = marca
+        self.modelo = modelo
+        self.ano = ano
+        self.velocidade_atual = 0
+
+    def acelerar(self):
+        self.velocidade_atual += 10
+        print(f"Acelerando... Velocidade: {self.velocidade_atual} km/h")
+
+    def frear(self):
+        self.velocidade_atual -= 10
+
+        if self.velocidade_atual < 0:
+            self.velocidade_atual = 0
+
+        print(f"Freando... Velocidade: {self.velocidade_atual} km/h")
+
+    def info(self):
+        return f"{self.marca} {self.modelo} ({self.ano}) - {self.velocidade_atual} km/h"
+
+
+# ==================================
+# CARRO
+# ==================================
+
+class Carro(Veiculo):
+    def __init__(self, marca, modelo, ano, numero_portas):
+        super().__init__(marca, modelo, ano)
+        self.numero_portas = numero_portas
+
+    def acelerar(self):
+        self.velocidade_atual += 15
+        print(f"Carro acelerando... Velocidade: {self.velocidade_atual} km/h")
+
+    def info(self):
+        return f"{self.marca} {self.modelo} ({self.ano}) - {self.numero_portas} portas - {self.velocidade_atual} km/h"
+
+
+# ==================================
+# MOTO
+# ==================================
+
+class Moto(Veiculo):
+    def __init__(self, marca, modelo, ano, cilindradas):
+        super().__init__(marca, modelo, ano)
+        self.cilindradas = cilindradas
+
+    def acelerar(self):
+        self.velocidade_atual += 20
+        print(f"Moto acelerando... Velocidade: {self.velocidade_atual} km/h")
+
+    def frear(self):
+        self.velocidade_atual -= 15
+
+        if self.velocidade_atual < 0:
+            self.velocidade_atual = 0
+
+        print(f"Moto freando... Velocidade: {self.velocidade_atual} km/h")
+
+    def info(self):
+        return f"{self.marca} {self.modelo} ({self.ano}) - {self.cilindradas}cc - {self.velocidade_atual} km/h"
+
+
+# ==================================
+# CAMINHÃO
+# ==================================
+
+class Caminhao(Veiculo):
+    def __init__(self, marca, modelo, ano, capacidade_carga):
+        super().__init__(marca, modelo, ano)
+        self.capacidade_carga = capacidade_carga
+        self.carga_atual = 0
+
+    def acelerar(self):
+        self.velocidade_atual += 5
+        print(f"Caminhão acelerando... Velocidade: {self.velocidade_atual} km/h")
+
+    def carregar(self, peso):
+        self.carga_atual += peso
+        print(f"Carregado {peso}kg. Carga atual: {self.carga_atual}kg")
+
+    def descarregar(self):
+        self.carga_atual = 0
+        print("Carga descarregada!")
+
+    def info(self):
+        return f"{self.marca} {self.modelo} ({self.ano}) - {self.velocidade_atual} km/h - Carga: {self.carga_atual}/{self.capacidade_carga}kg"
+
+
+# ==================================
+# FUNÇÃO DE SIMULAÇÃO
+# ==================================
+
+def simular_viagem(veiculo, aceleracoes, freadas):
+
+    print("\n--- SIMULANDO VIAGEM ---")
+    print(f"Executando {aceleracoes} acelerações e {freadas} freadas\n")
+
+    for i in range(aceleracoes):
+        print(f"Aceleração {i+1}:")
+        veiculo.acelerar()
+
+    for i in range(freadas):
+        print(f"\nFreada {i+1}:")
+        veiculo.frear()
+
+    print("\n--- FIM DA SIMULAÇÃO ---")
+
+
+# ==================================
+# TESTES
+# ==================================
+
+print("=" * 50)
+print("TESTE 1: Carro")
+print("=" * 50)
+
+carro = Carro("Toyota", "Corolla", 2022, 4)
+
+print("\nSITUAÇÃO INICIAL:")
+print(carro.info())
+
+simular_viagem(carro, 3, 1)
+
+print("\nSITUAÇÃO FINAL:")
+print(carro.info())
+
+
+print("\n" + "=" * 50)
+print("TESTE 2: Moto")
+print("=" * 50)
+
+moto = Moto("Honda", "CB 600", 2021, 600)
+
+print("\nSITUAÇÃO INICIAL:")
+print(moto.info())
+
+simular_viagem(moto, 3, 1)
+
+print("\nSITUAÇÃO FINAL:")
+print(moto.info())
+
+
+print("\n" + "=" * 50)
+print("TESTE 3: Caminhão")
+print("=" * 50)
+
+caminhao = Caminhao("Scania", "R450", 2023, 15000)
+
+print("\nSITUAÇÃO INICIAL:")
+print(caminhao.info())
+
+caminhao.carregar(5000)
+
+simular_viagem(caminhao, 3, 1)
+
+print("\nSITUAÇÃO FINAL:")
+print(caminhao.info())
+
+print("\n" + "=" * 50)
+print("TODOS OS TESTES CONCLUÍDOS!")
+print("=" * 50)
