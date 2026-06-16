@@ -11,6 +11,9 @@ TITULO = "Coletor de Tesouros"
 VELOCIDADE_PLAYER = 5
 QUANTIDADE_MOEDAS = 25
 
+# FUNDO
+CAMINHO_FUNDO = "cenario.png"
+
 # CAMINHOS DAS IMAGENS
 CAMINHO_PLAYER_DIREITA = "jogadora_right.png"
 CAMINHO_PLAYER_ESQUERDA = "jogadora_left.png"
@@ -29,7 +32,7 @@ class Player(arcade.Sprite):
 
     def __init__(self) -> None:
 
-        super().__init__(CAMINHO_PLAYER_DIREITA, scale=0.8)
+        super().__init__(CAMINHO_PLAYER_DIREITA, scale=0.15)
 
         self.textura_direita = arcade.load_texture(
             CAMINHO_PLAYER_DIREITA
@@ -44,7 +47,6 @@ class Player(arcade.Sprite):
         delta_time: float = 1/60
     ) -> None:
 
-        # movimentação
         self.center_x += self.change_x
         self.center_y += self.change_y
 
@@ -61,7 +63,7 @@ class Player(arcade.Sprite):
         if self.top > ALTURA_TELA:
             self.top = ALTURA_TELA
 
-        # troca textura
+        # trocar textura
         if self.change_x < 0:
             self.texture = self.textura_esquerda
 
@@ -76,7 +78,7 @@ class Moeda(arcade.Sprite):
 
     def __init__(self) -> None:
 
-        super().__init__(CAMINHO_MOEDA, scale=0.4)
+        super().__init__(CAMINHO_MOEDA, scale=0.08)
 
 
 # -----------------------------
@@ -86,7 +88,7 @@ class MoedaEspecial(arcade.Sprite):
 
     def __init__(self) -> None:
 
-        super().__init__(CAMINHO_MOEDA_ESPECIAL, scale=0.5)
+        super().__init__(CAMINHO_MOEDA_ESPECIAL, scale=0.10)
 
         self.change_x = random.choice([-4, 4])
         self.change_y = random.choice([-4, 4])
@@ -99,7 +101,7 @@ class MoedaEspecial(arcade.Sprite):
         self.center_x += self.change_x
         self.center_y += self.change_y
 
-        # rebote nas paredes
+        # rebote
         if self.left <= 0 or self.right >= LARGURA_TELA:
             self.change_x *= -1
 
@@ -114,7 +116,7 @@ class Inimigo(arcade.Sprite):
 
     def __init__(self) -> None:
 
-        super().__init__(CAMINHO_INIMIGO, scale=0.7)
+        super().__init__(CAMINHO_INIMIGO, scale=0.12)
 
         self.change_x = random.choice([-3, 3])
         self.change_y = random.choice([-3, 3])
@@ -141,7 +143,7 @@ class InimigoEspecial(arcade.Sprite):
 
     def __init__(self) -> None:
 
-        super().__init__(CAMINHO_INIMIGO_ESPECIAL, scale=0.7)
+        super().__init__(CAMINHO_INIMIGO_ESPECIAL, scale=0.12)
 
         self.change_x = random.choice([-5, 5])
         self.change_y = random.choice([-5, 5])
@@ -175,10 +177,9 @@ class JanelaJogo(arcade.Window):
         )
 
         arcade.set_background_color(
-            arcade.color.AMAZON
+            arcade.color.BLACK
         )
 
-        # listas
         self.player_lista = arcade.SpriteList()
         self.moedas_lista = arcade.SpriteList()
         self.moeda_especial_lista = arcade.SpriteList()
@@ -196,6 +197,11 @@ class JanelaJogo(arcade.Window):
 
     def setup(self) -> None:
 
+        # carregar fundo
+        self.fundo = arcade.load_texture(
+            CAMINHO_FUNDO
+        )
+
         # PLAYER
         self.player = Player()
 
@@ -204,7 +210,7 @@ class JanelaJogo(arcade.Window):
 
         self.player_lista.append(self.player)
 
-        # MOEDAS NORMAIS
+        # MOEDAS
         for i in range(QUANTIDADE_MOEDAS):
 
             moeda = Moeda()
@@ -224,7 +230,7 @@ class JanelaJogo(arcade.Window):
             moeda_especial
         )
 
-        # INIMIGO
+        # INIMIGO NORMAL
         inimigo = Inimigo()
 
         inimigo.center_x = 600
@@ -246,26 +252,14 @@ class JanelaJogo(arcade.Window):
 
         self.clear()
 
-        # tela final
-        if self.fim_jogo:
-
-            arcade.draw_text(
-                "FIM DE JOGO",
-                250,
-                320,
-                arcade.color.WHITE,
-                40
-            )
-
-            arcade.draw_text(
-                f"Pontuação Final: {self.pontos}",
-                220,
-                250,
-                arcade.color.YELLOW,
-                30
-            )
-
-            return
+        # fundo
+        arcade.draw_texture_rect(
+            LARGURA_TELA / 2,
+            ALTURA_TELA / 2,
+            LARGURA_TELA,
+            ALTURA_TELA,
+            self.fundo
+        )
 
         # desenhar sprites
         self.player_lista.draw()
@@ -294,6 +288,25 @@ class JanelaJogo(arcade.Window):
                 24
             )
 
+        # tela final
+        if self.fim_jogo:
+
+            arcade.draw_text(
+                "FIM DE JOGO",
+                250,
+                320,
+                arcade.color.WHITE,
+                40
+            )
+
+            arcade.draw_text(
+                f"Pontuação Final: {self.pontos}",
+                220,
+                250,
+                arcade.color.YELLOW,
+                30
+            )
+
     def on_update(
         self,
         delta_time: float
@@ -309,11 +322,9 @@ class JanelaJogo(arcade.Window):
         self.inimigo_especial_lista.update()
 
         # colisão moedas normais
-        moedas_colididas = (
-            arcade.check_for_collision_with_list(
-                self.player,
-                self.moedas_lista
-            )
+        moedas_colididas = arcade.check_for_collision_with_list(
+            self.player,
+            self.moedas_lista
         )
 
         for moeda in moedas_colididas:
@@ -323,11 +334,9 @@ class JanelaJogo(arcade.Window):
             self.pontos += 1
 
         # colisão moeda especial
-        especiais = (
-            arcade.check_for_collision_with_list(
-                self.player,
-                self.moeda_especial_lista
-            )
+        especiais = arcade.check_for_collision_with_list(
+            self.player,
+            self.moeda_especial_lista
         )
 
         for moeda in especiais:
@@ -337,11 +346,9 @@ class JanelaJogo(arcade.Window):
             self.pontos += 5
 
         # colisão inimigo normal
-        inimigos = (
-            arcade.check_for_collision_with_list(
-                self.player,
-                self.inimigo_lista
-            )
+        inimigos = arcade.check_for_collision_with_list(
+            self.player,
+            self.inimigo_lista
         )
 
         if len(inimigos) > 0:
@@ -355,11 +362,9 @@ class JanelaJogo(arcade.Window):
             self.tempo_mensagem = 60
 
         # colisão inimigo especial
-        inimigos_especiais = (
-            arcade.check_for_collision_with_list(
-                self.player,
-                self.inimigo_especial_lista
-            )
+        inimigos_especiais = arcade.check_for_collision_with_list(
+            self.player,
+            self.inimigo_especial_lista
         )
 
         for inimigo in inimigos_especiais:
