@@ -11,9 +11,6 @@ TITULO = "Coletor de Tesouros"
 VELOCIDADE_PLAYER = 5
 QUANTIDADE_MOEDAS = 25
 
-# FUNDO
-CAMINHO_FUNDO = "cenario.png"
-
 # CAMINHOS DAS IMAGENS
 CAMINHO_PLAYER_DIREITA = "jogadora_right.png"
 CAMINHO_PLAYER_ESQUERDA = "jogadora_left.png"
@@ -177,7 +174,7 @@ class JanelaJogo(arcade.Window):
         )
 
         arcade.set_background_color(
-            arcade.color.BLACK
+            arcade.color.AMAZON
         )
 
         self.player_lista = arcade.SpriteList()
@@ -196,11 +193,6 @@ class JanelaJogo(arcade.Window):
         self.fim_jogo = False
 
     def setup(self) -> None:
-
-        # carregar fundo
-        self.fundo = arcade.load_texture(
-            CAMINHO_FUNDO
-        )
 
         # PLAYER
         self.player = Player()
@@ -251,15 +243,6 @@ class JanelaJogo(arcade.Window):
     def on_draw(self) -> None:
 
         self.clear()
-
-        # fundo
-        arcade.draw_texture_rect(
-            LARGURA_TELA / 2,
-            ALTURA_TELA / 2,
-            LARGURA_TELA,
-            ALTURA_TELA,
-            self.fundo
-        )
 
         # desenhar sprites
         self.player_lista.draw()
